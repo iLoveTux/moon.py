@@ -25,17 +25,16 @@ def run_path(args):
     """Run a path (script, zip file, or dir) just like python <script>"""
     sys.argv.pop(0)
     fname = args.file
-    runpy.run_path(fname, run_name="__main__")
+    _locals = runpy.run_path(fname, run_name="__main__")
     if args.i:
-        interact()
+        interact(code.InteractiveConsole(locals=_locals))
 
 
 def run_m(args):
     """Run a module, just like python -m <module_name>"""
     sys.argv = sys.argv[sys.argv.index("-m"):]
     sys.argv.remove(args.m)
-    if not len(sys.argv):
-        sys.argv.append("")
+    if not len(sys.argv): sys.argv.append("")
     runpy.run_module(args.m, run_name="__main__", alter_sys=True)
     sys.exit(0)
 
@@ -45,17 +44,19 @@ def run_c(args):
     sys.argv = sys.argv[sys.argv.index("-c"):]
     sys.argv.remove(args.c)
     sys.path.insert(0, os.path.abspath("."))
-    interpreter = code.InteractiveInterpreter()
+    interpreter = code.InteractiveConsole()
     interpreter.runsource(args.c)
     if args.i:
-        interact()
+        interpreter.locals["exit"] = sys.exit
+        interact(interpreter)
     sys.exit(0)
 
 
-def interact():
+def interact(console=None):
     """Launch an enhanced, interactive Python interpreter"""
     set_up_history()
-    console = code.InteractiveConsole({"exit": lambda x=0: sys.exit(x)})
+    if not console:
+        console = code.InteractiveConsole(locals={"exit": sys.exit})
     console.interact("MoonPy - m-o-o-n that spells Python")
 
 
@@ -66,10 +67,8 @@ def main(argv=sys.argv):
     if "-m" in sys.argv and "-c" in sys.argv:
         func = run_m if sys.argv.index("-m") < sys.argv.index("-c") else run_c
         func(args)
-    elif args.c:
-        run_c(args)
-    elif args.m:
-        run_m(args)
+    elif args.c: run_c(args)
+    elif args.m: run_m(args)
 
     args.file = sys.stdin if args.file == "-" else args.file
     if args.file is sys.stdin:
@@ -77,8 +76,7 @@ def main(argv=sys.argv):
             interact()
         else:
             interpreter = code.InteractiveInterpreter()
-            for line in args.file:
-                interpreter.runsource(line)
+            [interpreter.runsource(line) for line in args.file]
     else:
         run_path(args)
 
