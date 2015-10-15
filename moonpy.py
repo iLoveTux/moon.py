@@ -54,6 +54,7 @@ def run_c(args):
 
 
 def interact():
+    """Launch an enhanced, interactive Python interpreter"""
     set_up_history()
     console = code.InteractiveConsole({"exit": lambda x=0: sys.exit(x)})
     console.interact("MoonPy - m-o-o-n that spells Python")
