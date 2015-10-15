@@ -3,8 +3,9 @@ import sys
 import code
 import runpy
 import atexit
-import readline
 import argparse
+try: import readline
+except ImportError: import pyreadline as readline
 
 here = os.path.dirname(os.path.abspath(__file__))
 if "site-packages" in os.listdir(here):
@@ -15,10 +16,8 @@ sys.path.insert(0, "")
 def set_up_history():
     """Taken from https://docs.python.org/2/library/readline.html#example"""
     histfile = os.path.join(os.path.expanduser("~"), ".pyhist")
-    try:
-        readline.read_history_file(histfile)
-    except IOError:
-        pass
+    try: readline.read_history_file(histfile)
+    except IOError: pass
     atexit.register(readline.write_history_file, histfile)
 
 
