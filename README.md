@@ -21,9 +21,8 @@ __Planned__
 These features are planned (but may never be implemented):
 
 1. Put out releases packaged with pyinstaller into a single executable
-2. Include the Python Standard Library with it in the site-packages directory (I know
-this isn't where they belong, but I really want to keep it under 100 lines of source,
-and this seems like an acceptable sacrifice)
+2. Include the Python Standard Library with it in the bundled executable
+with imports in an `if False:` block
 3. Include a few really useful packages like (and all of these might not be possible):
     1. paramiko
     2. pandas
@@ -31,7 +30,8 @@ and this seems like an acceptable sacrifice)
     4. IPython
     5. PyInstaller
     6. pip
-    7. more to come as I think of them
+    7. pexpect
+    8. more to come as I think of them
 4. provide a place to put executable scripts (like `bin` or `scripts`)
 5. If you can think of anything else you'd like to see, please open an issue on GitHub or better yet a Pull Request
 
@@ -42,6 +42,24 @@ Building is quite simple, but first you have to have the pre-requisites installe
 1. [python](https://python.org)
 2. [PyInstaller](http://www.pyinstaller.org/)
 3. (windows only)[pyreadline](https://ipython.org/pyreadline.html)
+
+### Additional pre-requisites for running tests
+
+__NOTE__: The tests will only run on Linux for right now. The offending tests
+are testing the ability to run scripts. They make a `NamedTemporaryFile`,
+write code to them and point both moonpy and python at them. Windows does not
+support having a file opened multiple times (at least I believe this is the
+case I haven't actually tested this, but if things change please open an issue)
+
+1. pexpect
+2. py.test
+
+to install these dependencies, issue the following commnd:
+
+```
+$ pip install pexpect
+$ pip install py.test
+```
 
 ### Python
 
@@ -74,6 +92,15 @@ C:\> pip install pyreadline
 
 ## Building
 
+Before building it would be a good idea to run the tests. If you've installed
+the [Additional pre-requisites for running tests](#Additional-pre-requisites-for-running-tests)
+then you simply need to navigate to the directory and issue the following
+command:
+
+```
+py.test
+```
+
 Once The pre-requisites are installed, you simply need to issue the following command:
 
 ```
@@ -88,8 +115,10 @@ This file should behave exactly like python when the supported features are used
 
 ## Contributing
 
-If you wish to contribute, please feel free to submit issues or issue pull-requests. The coding-stlye here is:
+If you wish to contribute, please feel free to submit issues or issue
+pull-requests. The coding-stlye here is:
 
-> Try to be pep8 compliant, but I __REALLY__ want to keep this under 100 lines of code. As soon as I implement tests (very soon) every change should have an associated test.
+> Try to be pep8 compliant, but I __REALLY__ want to keep this under 100
+lines of code. Also every change should have an associated test.
 
 Thanks for taking the time to stop by. Happy coding!
