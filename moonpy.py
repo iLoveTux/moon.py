@@ -11,6 +11,7 @@ def set_up_history():
     """Taken from https://docs.python.org/2/library/readline.html#example"""
     try: import readline
     except ImportError: import pyreadline as readline
+    else: import rlcompleter; readline.parse_and_bind("tab: complete")
     histfile = os.path.join(os.path.expanduser("~"), ".pyhist")
     try: readline.read_history_file(histfile)
     except IOError: pass
@@ -19,8 +20,7 @@ def set_up_history():
 def run_path(args):
     """Run a path (script, zip file, or dir) just like python <script>"""
     sys.argv.pop(0)
-    fname = args.file
-    _locals = runpy.run_path(fname, run_name="__main__")
+    _locals = runpy.run_path(args.file, run_name="__main__")
     if args.i:
         interact(code.InteractiveConsole(locals=_locals))
 
@@ -34,7 +34,7 @@ def run_m(args):
 
 def run_c(args):
     """Run a command, just like python -c <command>"""
-    sys.argv = ["-c"]
+    sys.argv = sys.argv[sys.argv.index("-c"):]; sys.argv.remove(args.c)
     sys.path.insert(0, os.path.abspath("."))
     interpreter = code.InteractiveConsole()
     interpreter.runsource(args.c)
@@ -54,8 +54,7 @@ def interact(console=None):
     set_up_history()
     sys.argv = [""]
     if not console:
-        console = code.InteractiveConsole(
-            locals={"exit": sys.exit})
+        console = code.InteractiveConsole(locals={"exit": sys.exit})
     console.interact("MoonPy - m-o-o-n that spells Python")
 
 def main(argv=None):
