@@ -167,6 +167,9 @@ class TestDashc(unittest.TestCase):
         command = "import sys; print sys.argv"
         self.assertEqual(*_compare_output_dash_c(command))
 
+        command = "import sys; print sys.argv' -m markdown"
+        self.assertEqual(*_compare_output_dash_c(command))
+
     def test_environ(self):
         command = "import os; print os.environ"
         self.assertEqual(*_compare_output_dash_c(command))

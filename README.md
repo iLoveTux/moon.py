@@ -15,15 +15,14 @@ This interpreter is fairly full-featured. It supports:
 7. Supports a `site-packages` directory (must be in the same directory as the script)
 8. Supports relative and absolute imports
 9. Supports Python source being piped in on stdin
+10. Entire standard library is now included
 
 __Planned__
 
 These features are planned (but may never be implemented):
 
 1. Put out releases packaged with pyinstaller into a single executable
-2. Include the Python Standard Library with it in the bundled executable
-with imports in an `if False:` block
-3. Include a few really useful packages like (and all of these might not be possible):
+2. Include a few really useful packages like (and all of these might not be possible):
     1. paramiko
     2. pandas
     3. openpyxl
@@ -32,8 +31,18 @@ with imports in an `if False:` block
     6. pip
     7. pexpect
     8. more to come as I think of them
-4. provide a place to put executable scripts (like `bin` or `scripts`)
-5. If you can think of anything else you'd like to see, please open an issue on GitHub or better yet a Pull Request
+3. provide a place to put executable scripts (like `bin` or `scripts`)
+4. If you can think of anything else you'd like to see, please open an issue on GitHub or better yet a Pull Request
+
+## Installing
+
+Now that we have an official beta release, you can head over to the [downloads](https://github.com/iLoveTux/moon.py/releases/tag/0.6.0) and grab a copy.
+
+There is no installation required. There is, however, one thing you should know about the binary releases, there are two files for each platform (except win32 because I don't actually have access to a 32 bit windows machine at the moment), a zip file and an executable file.
+
+The executable file is ready to go, just grab it (and change the permissions if you have to) and run it. It is a full featured, single file Python distribution ready to go, but upon every execution it unzips itself into a temporary directory. This adds overhead, so if that's a problem grab the zip file.
+
+The zip file can be extracted anywhere and it will make a directory called `./moonpy/` which contains everything you need to run. This only needs to be unzipped once and it can be executed with no additional overhead.
 
 ## Pre-Requisites
 
