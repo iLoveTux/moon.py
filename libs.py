@@ -428,3 +428,7 @@ if False:
     import zipfile
     import zipimport
     import zlib
+
+    # Non-standard libraries
+    import requests
+    import bs4
