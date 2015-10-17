@@ -113,6 +113,16 @@ class TestOutputMatchesPythonConsole(unittest.TestCase):
         for pyout, moonout in _compare_output_console(commands):
             self.assertEqual(pyout, moonout)
 
+    def test_locals(self):
+        commands = ["locals()", "exit()"]
+        for pyout, moonout in _compare_output_console(commands):
+            self.assertEqual(pyout, moonout)
+
+    def test_globals(self):
+        commands = ["print globals()", "exit()"]
+        for pyout, moonout in _compare_output_console(commands):
+            self.assertEqual(pyout, moonout)
+
 
 class TestOutputMatchesPythonScript(unittest.TestCase):
     def test_env(self):
@@ -136,6 +146,22 @@ print __name__
 """
         self.assertEqual(*_compare_output_script(content))
 
+    def test_locals(self):
+        content = """
+print locals()
+"""
+        python, moonpy = _compare_output_script(content)
+        moonpy = moonpy.replace("'__loader__': None, ", "")
+        self.assertEqual(python, moonpy)
+
+    def test_globals(self):
+        content = """
+print globals()
+"""
+        python, moonpy = _compare_output_script(content)
+        moonpy = moonpy.replace("'__loader__': None, ", "")
+        self.assertEqual(python, moonpy)
+
 class TestDashc(unittest.TestCase):
     def test_argv(self):
         command = "import sys; print sys.argv"
@@ -143,4 +169,12 @@ class TestDashc(unittest.TestCase):
 
     def test_environ(self):
         command = "import os; print os.environ"
+        self.assertEqual(*_compare_output_dash_c(command))
+
+    def test_locals(self):
+        command = "print locals()"
+        self.assertEqual(*_compare_output_dash_c(command))
+
+    def test_globals(self):
+        command = "print globals()"
         self.assertEqual(*_compare_output_dash_c(command))

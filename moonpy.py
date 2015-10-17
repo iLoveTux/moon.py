@@ -4,6 +4,9 @@ import code
 import runpy
 import atexit
 import argparse
+import __builtin__
+
+_locals = {'__builtins__': __builtin__, '__name__': '__main__', '__doc__': None, '__package__': None}
 
 __version__ = "moonpy 0.6.0"
 
@@ -20,9 +23,9 @@ def run_path(args):
     """Run a path (script, zip file, or dir) just like python <script>"""
     sys.argv.pop(0)
     fname = args.file
-    _locals = runpy.run_path(fname, run_name="__main__")
+    __locals = runpy.run_path(fname, run_name="__main__", init_globals=_locals)
     if args.i:
-        interact(code.InteractiveConsole(locals=_locals))
+        interact(code.InteractiveConsole(locals=__locals))
 
 def run_m(args):
     """Run a module, just like python -m <module_name>"""
@@ -36,7 +39,7 @@ def run_c(args):
     """Run a command, just like python -c <command>"""
     sys.argv = ["-c"]
     sys.path.insert(0, os.path.abspath("."))
-    interpreter = code.InteractiveConsole()
+    interpreter = code.InteractiveConsole(locals=_locals)
     interpreter.runsource(args.c)
     if args.i:
         interpreter.locals["exit"] = sys.exit; interact(interpreter)
@@ -55,7 +58,7 @@ def interact(console=None):
     sys.argv = [""]
     if not console:
         console = code.InteractiveConsole(
-            locals={"exit": sys.exit})
+            locals=_locals)
     console.interact("MoonPy - m-o-o-n that spells Python")
 
 def main(argv=None):
