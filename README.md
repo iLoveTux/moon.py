@@ -116,7 +116,7 @@ Once The pre-requisites are installed, you simply need to issue the following co
 $ pyinstaller --onefile moonpy.py
 ```
 
-This will give you a base executable, which is a fairly-fully featured Python interpreter, but it is missing most of the standard library. To get this you will need to copy the packages manually over to where the executable is located. For convenience's sake, if a directory named `site-packages` exists in the same directory as the executable, it will be added to the path (as well as the current directory).
+This will give you a base executable, which is a fairly-fully featured Python interpreter, ~~but it is missing most of the standard library. To get this you will need to copy the packages manually over to where the executable is located~~. For convenience's sake, if a directory named `site-packages` exists in the same directory as the executable, it will be added to the path (as well as the current directory).
 
 ## Usage
 
